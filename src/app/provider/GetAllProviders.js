@@ -11,7 +11,7 @@ class GetAllProviders extends Operation {
 
     try {
       const providers = await this.providersRepository.getAll({
-        attributes: ['id', 'name', 'email', 'address', 'logo', 'description']
+        attributes: ['id', 'name', 'email', 'address', 'logo', 'description', 'status']
       });
 
       this.emit(SUCCESS, providers);

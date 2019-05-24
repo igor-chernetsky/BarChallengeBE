@@ -48,6 +48,7 @@ module.exports = ({
 
   apiRouter.use('/customers', controller('customer/CustomersController'));
   apiRouter.use('/providers', controller('provider/ProvidersController'));
+  apiRouter.use('/products', controller('product/ProductsController'));
 
   router.use('/api', apiRouter);
 

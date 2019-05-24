@@ -28,6 +28,9 @@ module.exports = {
       description: {
         type: Sequelize.TEXT
       },
+      status: {
+        type: Sequelize.STRING
+      },
       passwordHash: {
         type: Sequelize.STRING,
         allowNull: false

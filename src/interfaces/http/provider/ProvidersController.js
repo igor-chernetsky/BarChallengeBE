@@ -114,7 +114,7 @@ const ProvidersController = {
     const { updateProvider, providerSerializer } = req;
     const { SUCCESS, ERROR, VALIDATION_ERROR, NOT_FOUND } = updateProvider.outputs;
 
-    if (!req.role === 'provider' || req.id !== req.params.id) {
+    if (req.role !== 'provider' || +req.userId !== +req.params.id) {
       return res.status(Status.FORBIDDEN).json({
         type: 'You don\'t have access to this action'
       });

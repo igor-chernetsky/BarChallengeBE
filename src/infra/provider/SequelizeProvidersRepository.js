@@ -57,7 +57,7 @@ class SequelizeProvidersRepository {
     try {
       const updatedProvider = await provider.update(newData, { transaction });
       const providerEntity = ProviderMapper.toEntity(updatedProvider);
-
+      console.log(providerEntity);
       const { valid, errors } = providerEntity.validate();
 
       if(!valid) {

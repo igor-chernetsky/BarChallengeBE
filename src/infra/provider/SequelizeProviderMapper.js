@@ -9,6 +9,7 @@ const SequelizeProviderMapper = {
       description,
       address,
       email,
+      status,
       phone
     } = dataValues;
 
@@ -30,6 +31,7 @@ const SequelizeProviderMapper = {
       description,
       address,
       email,
+      status,
       phone
     } = survivor;
 
@@ -39,6 +41,7 @@ const SequelizeProviderMapper = {
       description,
       address,
       email,
+      status,
       phone
     };
   }

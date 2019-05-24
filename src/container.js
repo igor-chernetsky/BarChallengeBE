@@ -19,9 +19,18 @@ const {
   UpdateProvider,
   DeleteProvider
 } = require('./app/provider');
+const {
+  CreateProduct,
+  GetAllProducts,
+  GetProviderProducts,
+  GetProduct,
+  UpdateProduct,
+  DeleteProduct
+} = require('./app/product');
 
 const CustomerSerializer = require('./interfaces/http/customer/CustomerSerializer');
 const ProviderSerializer = require('./interfaces/http/provider/ProviderSerializer');
+const ProductSerializer = require('./interfaces/http/product/ProductSerializer');
 
 const Server = require('./interfaces/http/Server');
 const router = require('./interfaces/http/router');
@@ -35,10 +44,12 @@ const logger = require('./infra/logging/logger');
 
 const SequelizeCustomersRepository = require('./infra/customer/SequelizeCustomersRepository');
 const SequelizeProvidersRepository = require('./infra/provider/SequelizeProvidersRepository');
+const SequelizeProductsRepository = require('./infra/product/SequelizeProductsRepository');
 
 const { database,
   Customer: CustomerModel,
-  Provider: ProviderModel
+  Provider: ProviderModel,
+  Product: ProductModel
 } = require('./infra/database/models');
 
 const container = createContainer();
@@ -72,14 +83,16 @@ container
 // Repositories
 container.register({
   customersRepository: asClass(SequelizeCustomersRepository).singleton(),
-  providersRepository: asClass(SequelizeProvidersRepository).singleton()
+  providersRepository: asClass(SequelizeProvidersRepository).singleton(),
+  productsRepository: asClass(SequelizeProductsRepository).singleton()
 });
 
 // Database
 container.register({
   database: asValue(database),
   CustomerModel: asValue(CustomerModel),
-  ProviderModel: asValue(ProviderModel)
+  ProviderModel: asValue(ProviderModel),
+  ProductModel: asValue(ProductModel)
 });
 
 // Operations
@@ -96,13 +109,21 @@ container.register({
   getAllProviders: asClass(GetAllProviders),
   getProvider: asClass(GetProvider),
   updateProvider: asClass(UpdateProvider),
-  deleteProvider: asClass(DeleteProvider)
+  deleteProvider: asClass(DeleteProvider),
+
+  createProduct: asClass(CreateProduct),
+  getAllProducts: asClass(GetAllProducts),
+  getProviderProducts: asClass(GetProviderProducts),
+  getProduct: asClass(GetProduct),
+  updateProduct: asClass(UpdateProduct),
+  deleteProduct: asClass(DeleteProduct)
 });
 
 // Serializers
 container.register({
   customerSerializer: asValue(CustomerSerializer),
-  providerSerializer: asValue(ProviderSerializer)
+  providerSerializer: asValue(ProviderSerializer),
+  productSerializer: asValue(ProductSerializer)
 });
 
 module.exports = container;

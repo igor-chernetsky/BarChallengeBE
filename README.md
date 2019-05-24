@@ -1,13 +1,11 @@
-# Node API boilerplate
-
-An opinionated boilerplate for Node web APIs focused on separation of concerns and scalability.
+# Bar Challege Backend
 
 ## Features
 
 <dl>
-  <dt>Multilayer folder structure</dt>
+  <dt>base for the project is taken from here</dt>
   <dd>
-    <a href="https://github.com/talyssonoc/node-api-boilerplate/wiki/Folder-structure">Code organization</a> inspired by <a href="http://dddcommunity.org/">DDD</a> and <a href="https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html">Clean Architecture</a> focused on codebase scalability.
+    <a href="https://github.com/talyssonoc/node-api-boilerplate">Node API boilerplate</a>
   </dd>
 
   <dt>Instant feedback and reload</dt>
@@ -58,10 +56,8 @@ An opinionated boilerplate for Node web APIs focused on separation of concerns a
 
 ## Quick start
 
-_Notice that the boilerplate comes with a small application for user management already, you can delete it with a npm script after you understand how the boilerplate works but please do the quick start first!_ 😊
-
 1. Clone the repository with `git clone --depth=1 https://github.com/talyssonoc/node-api-boilerplate`
-2. Setup the database on `config/database.js` (there's an example file there to be used with PostgreSQL 😉 )
+2. Setup the database on `config/database.js`
 3. Install the dependencies with `yarn` (click here if [you don't have Yarn installed](https://yarnpkg.com/docs/install))
 4. Create the development and test databases you have setup on `config/database.js`
 5. Run the database migrations with `npm run sequelize db:migrate`
