@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('customers', {
+    return queryInterface.createTable('challenges', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,16 +11,18 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false
+      description: {
+        type: Sequelize.TEXT
       },
-      phone: {
-        type: Sequelize.STRING
-      },
-      passwordHash: {
-        type: Sequelize.STRING,
-        allowNull: false
+      providerId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'providers',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'SET NULL'
       },
       createdAt: {
         allowNull: false,
@@ -33,10 +35,6 @@ module.exports = {
     });
   },
   down: function(queryInterface) {
-    return queryInterface.dropTable('steps');
-    return queryInterface.dropTable('challengeCustomers');
     return queryInterface.dropTable('challenges');
-    return queryInterface.dropTable('products');
-    return queryInterface.dropTable('customers');
   }
 };

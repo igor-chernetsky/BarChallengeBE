@@ -1,5 +1,6 @@
 let jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const Status = require('http-status');
 
 module.exports = (req, res, next) => {
   const {auth} = req.container.cradle.config.web;
@@ -23,12 +24,23 @@ function checkToken(req, res, next, auth) {
   }
 
   if (token) {
-    const decoded = jwt.verify(token, auth.secret);
-    if (decoded) {
-      req.role = decoded.role;
-      req.userId = decoded.id;
+    if (token === auth.publicToken) {
+      next();
+    } else {
+      try {
+        const decoded = jwt.verify(token, auth.secret);
+        if (decoded) {
+          req.role = decoded.role;
+          req.userId = decoded.id;
+        }
+        next();
+      } catch(error) {
+        res.status(Status.FORBIDDEN).json({
+          type: 'Token is wrong',
+          details: error
+        });
+      }
     }
-    next();
   } else {
     next();
   }

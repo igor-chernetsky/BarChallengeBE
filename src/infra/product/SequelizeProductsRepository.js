@@ -1,15 +1,14 @@
 const ProductMapper = require('./SequelizeProductMapper');
 
 class SequelizeProductsRepository {
-  constructor({ ProductModel }) {
+  constructor({ ProductModel, ProviderModel }) {
     this.ProductModel = ProductModel;
+    this.ProviderModel = ProviderModel;
   }
 
   async getAll(...args) {
-    const provider = this.ProductModel.modelManager.models.find(m => m.name === 'provider');
-    console.log('-----------------', args);
     if (args.length) {
-      Object.assign(args[0], {include: [{model: provider}]});
+      Object.assign(args[0], {include: [{model: this.ProviderModel}]});
     }
     const products = await this.ProductModel.findAll(...args);
     return products.map(ProductMapper.toEntity);
@@ -70,7 +69,12 @@ class SequelizeProductsRepository {
 
   async _getById(id) {
     try {
-      return await this.ProductModel.findById(id, { rejectOnEmpty: true });
+      console.log(111);
+      const params = {
+        rejectOnEmpty: true,
+        include: [{model: this.ProviderModel}]
+      };
+      return await this.ProductModel.findByPk(id, params);
     } catch(error) {
       if(error.name === 'SequelizeEmptyResultError') {
         const notFoundError = new Error('NotFoundError');

@@ -1,4 +1,5 @@
 const Product = require('src/domain/product/Product');
+const ProviderMapper = require('../provider/SequelizeProviderMapper');
 
 const SequelizeProductMapper = {
   toEntity({ dataValues }) {
@@ -7,25 +8,19 @@ const SequelizeProductMapper = {
       name,
       image,
       description,
-      provider
+      provider,
+      isReward,
+      stepId
     } = dataValues;
-
-    const productProvider = {
-      id: provider.id,
-      name: provider.name,
-      description: provider.description,
-      address: provider.address,
-      logo: provider.logo,
-      phone: provider.phone,
-      email: provider.email
-    };
-
+    const porductPorvider = provider ? ProviderMapper.toEntity({dataValues: provider}) : undefined;
     return new Product({
       id,
       name,
       image,
       description,
-      provider: productProvider
+      isReward,
+      stepId,
+      provider: porductPorvider
     });
   },
 

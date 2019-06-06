@@ -10,6 +10,9 @@ const Provider = attributes({
     type: String,
     required: true
   },
+  address: String,
+  description: String,
+  phone: String,
   status: String
 })(class Provider {});
 

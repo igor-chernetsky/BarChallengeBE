@@ -116,7 +116,8 @@ const ProvidersController = {
 
     if (req.role !== 'provider' || +req.userId !== +req.params.id) {
       return res.status(Status.FORBIDDEN).json({
-        type: 'You don\'t have access to this action'
+        type: 'AccessError',
+        details: 'You don\'t have access to this action'
       });
     }
 

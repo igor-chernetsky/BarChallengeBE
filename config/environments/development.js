@@ -7,7 +7,8 @@ module.exports = {
     auth: {
       secret: 'devsecret',
       saltRounds: 10,
-      passSalt: 'devsalt'
+      passSalt: 'devsalt',
+      publicToken: 'bcPblTstTkn'
     }
   },
   logging: {

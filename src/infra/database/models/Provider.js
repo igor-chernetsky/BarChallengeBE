@@ -1,20 +1,20 @@
 'use strict';
+const Sequelize = require('sequelize');
 
 module.exports = function(sequelize, DataTypes) {
-  const Provider = sequelize.define('provider', {
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    logo: DataTypes.STRING,
-    description: DataTypes.STRING,
-    phone: DataTypes.STRING,
-    status: DataTypes.STRING,
-    passwordHash: DataTypes.STRING
+  class Provider extends Sequelize.Model {};
+  Provider.init({
+    name: {type: DataTypes.STRING},
+    email: {type: DataTypes.STRING},
+    logo: {type: DataTypes.STRING},
+    description: {type: DataTypes.STRING},
+    address: {type: DataTypes.STRING},
+    phone: {type: DataTypes.STRING},
+    status: {type: DataTypes.STRING},
+    passwordHash: {type: DataTypes.STRING}
   }, {
-    classMethods: {
-      associate() {
-        // associations can be defined here
-      }
-    }
+    sequelize,
+    modelName: 'provider'
   });
 
   return Provider;

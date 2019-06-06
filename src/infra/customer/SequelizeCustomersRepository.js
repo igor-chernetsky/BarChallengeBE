@@ -84,7 +84,7 @@ class SequelizeCustomersRepository {
 
   async _getById(id) {
     try {
-      return await this.CustomerModel.findById(id, { rejectOnEmpty: true });
+      return await this.CustomerModel.findByPk(id, { rejectOnEmpty: true });
     } catch(error) {
       if(error.name === 'SequelizeEmptyResultError') {
         const notFoundError = new Error('NotFoundError');

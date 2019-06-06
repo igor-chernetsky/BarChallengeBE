@@ -13,7 +13,6 @@ class SequelizeProvidersRepository {
 
   async getById(id) {
     const provider = await this._getById(id);
-
     return ProviderMapper.toEntity(provider);
   }
 
@@ -57,7 +56,6 @@ class SequelizeProvidersRepository {
     try {
       const updatedProvider = await provider.update(newData, { transaction });
       const providerEntity = ProviderMapper.toEntity(updatedProvider);
-      console.log(providerEntity);
       const { valid, errors } = providerEntity.validate();
 
       if(!valid) {
@@ -85,7 +83,7 @@ class SequelizeProvidersRepository {
 
   async _getById(id) {
     try {
-      return await this.ProviderModel.findById(id, { rejectOnEmpty: true });
+      return await this.ProviderModel.findByPk(id, { rejectOnEmpty: true });
     } catch(error) {
       if(error.name === 'SequelizeEmptyResultError') {
         const notFoundError = new Error('NotFoundError');
@@ -93,7 +91,6 @@ class SequelizeProvidersRepository {
 
         throw notFoundError;
       }
-
       throw error;
     }
   }
@@ -101,8 +98,6 @@ class SequelizeProvidersRepository {
   async _login(email, password) {
     try {
       const provider = await this._getByEmail(email);
-      console.log(password);
-      console.log(provider.passwordHash);
       const cryptRes = await bcrypt.compare(password, provider.passwordHash);
       if (cryptRes) {
         return provider;
@@ -113,7 +108,6 @@ class SequelizeProvidersRepository {
         throw notFoundError;
       }
     } catch(error) {
-      console.log('errpr', error);
       if(error.name === 'SequelizeEmptyResultError') {
         const notFoundError = new Error('NotFoundError');
         notFoundError.details = `Wrong Email or Password.`;

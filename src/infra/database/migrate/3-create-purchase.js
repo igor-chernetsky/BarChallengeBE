@@ -1,35 +1,32 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('products', {
+    return queryInterface.createTable('purchases', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING
-      },
-      image: {
-        type: Sequelize.STRING
-      },
-      description: {
-        type: Sequelize.TEXT
-      },
-      providerId: {
+      customerId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'providers',
+          model: 'customers',
           key: 'id'
         },
         onUpdate: 'cascade',
-        onDelete: 'SET NULL'
+        onDelete: 'cascade'
       },
-      deleted: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
+      productId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'products',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
       },
       createdAt: {
         allowNull: false,
@@ -42,6 +39,6 @@ module.exports = {
     });
   },
   down: function(queryInterface) {
-    return queryInterface.dropTable('products');
+    return queryInterface.dropTable('purchases');
   }
 };

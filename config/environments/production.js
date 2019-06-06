@@ -4,7 +4,8 @@ module.exports = {
     auth: {
       secret: 'hellodarknesmyoldfrienD',
       saltRounds: 15,
-      passSalt: 'wordsFromSomeSongh3re'
+      passSalt: 'wordsFromSomeSongh3re',
+      publicToken: 'bcPblPrdScrtTokenTkn'
     }
   },
   logging: {

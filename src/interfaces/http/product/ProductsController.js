@@ -1,7 +1,6 @@
 const { Router } = require('express');
 const { inject } = require('awilix-express');
 const Status = require('http-status');
-const jwt = require('jsonwebtoken');
 
 const ProductsController = {
   get router() {
@@ -79,10 +78,6 @@ const ProductsController = {
 
     createProduct
       .on(SUCCESS, (product) => {
-        const token = jwt.sign({id: product.id, role: 'product'},
-          authConfig.secret,
-          { expiresIn: '24h' }
-        );
         res
           .status(Status.OK)
           .json(productSerializer.serialize(product));

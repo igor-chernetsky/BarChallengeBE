@@ -1,18 +1,22 @@
 'use strict';
+const Sequelize = require('sequelize');
 
 module.exports = function(sequelize, DataTypes) {
-  const Product = sequelize.define('product', {
+  class Product extends Sequelize.Model {};
+  Product.init({
     name: DataTypes.STRING,
     image: DataTypes.STRING,
-    description: DataTypes.STRING
+    description: DataTypes.STRING,
+    deleted: DataTypes.BOOLEAN
   }, {
-    classMethods: {
-      associate(modules) {
-        modules.Product.belongsTo(modules.Provider);
-        modules.Provider.hasMany(modules.Product);
-      }
-    }
+    sequelize,
+    modelName: 'product'
   });
+
+  Product.associate = (modules) => {
+    modules.Provider.hasMany(modules.Product);
+    modules.Product.belongsTo(modules.Provider);
+  }
 
   return Product;
 };

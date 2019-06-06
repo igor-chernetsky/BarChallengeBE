@@ -27,10 +27,23 @@ const {
   UpdateProduct,
   DeleteProduct
 } = require('./app/product');
+const {
+  CreateChallenge,
+  GetAllChallenges,
+  GetProviderChallenges,
+  GetCustomerChallenges,
+  GetChallenge,
+  UpdateChallenge,
+  DeleteChallenge
+} = require('./app/challenge');
+const {
+  CreatePurchase
+} = require('./app/purchase');
 
 const CustomerSerializer = require('./interfaces/http/customer/CustomerSerializer');
 const ProviderSerializer = require('./interfaces/http/provider/ProviderSerializer');
 const ProductSerializer = require('./interfaces/http/product/ProductSerializer');
+const ChallengeSerializer = require('./interfaces/http/challenge/ChallengeSerializer');
 
 const Server = require('./interfaces/http/Server');
 const router = require('./interfaces/http/router');
@@ -45,11 +58,17 @@ const logger = require('./infra/logging/logger');
 const SequelizeCustomersRepository = require('./infra/customer/SequelizeCustomersRepository');
 const SequelizeProvidersRepository = require('./infra/provider/SequelizeProvidersRepository');
 const SequelizeProductsRepository = require('./infra/product/SequelizeProductsRepository');
+const SequelizeChallengesRepository = require('./infra/challenge/SequelizeChallengesRepository');
+const SequelizePurchasesRepository = require('./infra/purchase/SequelizePurchasesRepository');
 
 const { database,
   Customer: CustomerModel,
   Provider: ProviderModel,
-  Product: ProductModel
+  Product: ProductModel,
+  Challenge: ChallengeModel,
+  Step: StepModel,
+  Purchase: PurchaseModel,
+  ChallengeCustomer: ChallengeCustomerModel
 } = require('./infra/database/models');
 
 const container = createContainer();
@@ -84,7 +103,9 @@ container
 container.register({
   customersRepository: asClass(SequelizeCustomersRepository).singleton(),
   providersRepository: asClass(SequelizeProvidersRepository).singleton(),
-  productsRepository: asClass(SequelizeProductsRepository).singleton()
+  productsRepository: asClass(SequelizeProductsRepository).singleton(),
+  challengesRepository: asClass(SequelizeChallengesRepository).singleton(),
+  purchasesRepository: asClass(SequelizePurchasesRepository).singleton()
 });
 
 // Database
@@ -92,7 +113,11 @@ container.register({
   database: asValue(database),
   CustomerModel: asValue(CustomerModel),
   ProviderModel: asValue(ProviderModel),
-  ProductModel: asValue(ProductModel)
+  ProductModel: asValue(ProductModel),
+  ChallengeModel: asValue(ChallengeModel),
+  StepModel: asValue(StepModel),
+  PurchaseModel: asValue(PurchaseModel),
+  ChallengeCustomerModel: asValue(ChallengeCustomerModel)
 });
 
 // Operations
@@ -116,14 +141,25 @@ container.register({
   getProviderProducts: asClass(GetProviderProducts),
   getProduct: asClass(GetProduct),
   updateProduct: asClass(UpdateProduct),
-  deleteProduct: asClass(DeleteProduct)
+  deleteProduct: asClass(DeleteProduct),
+
+  createChallenge: asClass(CreateChallenge),
+  getAllChallenges: asClass(GetAllChallenges),
+  getProviderChallenges: asClass(GetProviderChallenges),
+  getCustomerChallenges: asClass(GetCustomerChallenges),
+  getChallenge: asClass(GetChallenge),
+  updateChallenge: asClass(UpdateChallenge),
+  deleteChallenge: asClass(DeleteChallenge),
+
+  createPurchase: asClass(CreatePurchase),
 });
 
 // Serializers
 container.register({
   customerSerializer: asValue(CustomerSerializer),
   providerSerializer: asValue(ProviderSerializer),
-  productSerializer: asValue(ProductSerializer)
+  productSerializer: asValue(ProductSerializer),
+  challengeSerializer: asValue(ChallengeSerializer)
 });
 
 module.exports = container;
