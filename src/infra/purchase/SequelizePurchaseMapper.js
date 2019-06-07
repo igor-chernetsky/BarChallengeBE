@@ -37,7 +37,6 @@ const SequelizePurchaseMapper = {
       id,
       customerId,
       challengeId,
-      stepsLeft,
       rewardId
     } = dataValues;
 
@@ -45,7 +44,6 @@ const SequelizePurchaseMapper = {
       id,
       customerId,
       challengeId,
-      stepsLeft,
       rewardId
     }
   },
@@ -55,7 +53,6 @@ const SequelizePurchaseMapper = {
       id,
       customerId,
       challengeId,
-      stepsLeft,
       rewardId
     } = data;
 
@@ -63,7 +60,6 @@ const SequelizePurchaseMapper = {
       id,
       challengeId,
       customerId,
-      stepsLeft,
       rewardId
     }
   }

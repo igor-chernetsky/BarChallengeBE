@@ -33,10 +33,6 @@ module.exports = {
     });
   },
   down: function(queryInterface) {
-    return queryInterface.dropTable('steps');
-    return queryInterface.dropTable('challengeCustomers');
-    return queryInterface.dropTable('challenges');
-    return queryInterface.dropTable('products');
     return queryInterface.dropTable('customers');
   }
 };

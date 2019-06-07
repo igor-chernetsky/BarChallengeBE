@@ -1,14 +1,16 @@
 const ChallengeMapper = require('./SequelizeChallengeMapper');
+const Sequelize = require('sequelize');
 
 class SequelizeChallengesRepository {
   constructor({ ChallengeModel, StepModel, ProductModel,
-    ProviderModel, CustomerModel, ChallengeCustomerModel }) {
+    ProviderModel, CustomerModel, ChallengeCustomerModel, PurchaseStepModel }) {
     this.ChallengeModel = ChallengeModel;
     this.ProviderModel = ProviderModel;
     this.ProductModel = ProductModel;
     this.CustomerModel = CustomerModel;
     this.StepModel = StepModel;
     this.ChallengeCustomerModel = ChallengeCustomerModel;
+    this.PurchaseStepModel = PurchaseStepModel;
   }
 
   async getAll(...args) {
@@ -26,24 +28,34 @@ class SequelizeChallengesRepository {
 
   async getCustomerChallenges(customerId) {
     const params = {
-      include: [
-      {model: this.CustomerModel},
-      {
+      include: [{
         model: this.ChallengeModel, include:
         [
-          {model: this.StepModel, include: {model: this.ProductModel}},
+          {
+            model: this.StepModel,
+            include: [
+              {model: this.ProductModel}
+            ]
+          },
           {
             model: this.ProviderModel,
             attributes: ['id', 'name', 'email', 'description', 'address']
           },
         ]
-      }
-    ]};
+      }, {
+        model: this.PurchaseStepModel,
+        required: false,
+      }],
+      where: {customerId}
+    };
     const customerChallenges = await this.ChallengeCustomerModel.findAll(params);
     const challenges = customerChallenges.map(ch => {
       const challenge = ChallengeMapper.toEntity(ch.dataValues.challenge);
+      const purchasedSteps = ch.dataValues.purchaseSteps.filter(ps => {
+        return ps.dataValues.challengeCustomerId === ch.dataValues.id;
+      });
       challenge.products.forEach(p => {
-        if (ch.dataValues.stepsLeft.indexOf(p.stepId) === -1) p.status = 'done';
+        if (purchasedSteps.find(ps => ps.dataValues.stepId === p.stepId)) p.status = 'done';
       });
       return challenge;
     });

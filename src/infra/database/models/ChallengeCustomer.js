@@ -4,10 +4,6 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   class ChallengeCustomer extends Sequelize.Model {};
   ChallengeCustomer.init({
-    stepsLeft: {
-      type: DataTypes.ARRAY(DataTypes.INTEGER),
-      defaultValue: []
-    },
     rewardId: {
       type: DataTypes.INTEGER,
       references: {
