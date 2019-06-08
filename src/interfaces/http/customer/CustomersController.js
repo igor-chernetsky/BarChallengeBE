@@ -39,7 +39,7 @@ const CustomersController = {
     const { SUCCESS, ERROR, NOT_FOUND } = loginCustomer.outputs;
     loginCustomer
       .on(SUCCESS, (customer) => {
-        const token = jwt.sign({id: customer.id, role: 'cunsumer'},
+        const token = jwt.sign({id: customer.id, role: 'customer'},
           authConfig.secret,
           { expiresIn: '24h' }
         );
@@ -89,7 +89,7 @@ const CustomersController = {
 
     createCustomer
       .on(SUCCESS, (customer) => {
-        const token = jwt.sign({id: customer.id, role: 'cunsumer'},
+        const token = jwt.sign({id: customer.id, role: 'customer'},
           authConfig.secret,
           { expiresIn: '24h' }
         );

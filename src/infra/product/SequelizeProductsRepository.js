@@ -69,7 +69,6 @@ class SequelizeProductsRepository {
 
   async _getById(id) {
     try {
-      console.log(111);
       const params = {
         rejectOnEmpty: true,
         include: [{model: this.ProviderModel}]

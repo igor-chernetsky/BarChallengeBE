@@ -7,27 +7,27 @@ const SequelizePurchaseMapper = {
   toEntity({ dataValues }) {
     const {
       id,
-      customer,
+      customerId,
       product,
-      createdDate
+      createdAt
     } = dataValues;
     const purchaseProduct = product ? ProductMapper.toEntity(product) : undefined;
     return new Purchase({
       id,
-      customer,
+      customerId,
       product: purchaseProduct,
-      createdDate
+      createdAt
     });
   },
 
   toDatabase(survivor) {
     const {
-      customer,
+      customerId,
       product,
     } = survivor;
 
     return {
-      customerId: customer.id,
+      customerId: customerId,
       product: product.id
     };
   },

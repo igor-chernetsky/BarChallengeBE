@@ -2,9 +2,9 @@ const { attributes } = require('structure');
 
 const Purchase = attributes({
   id: Number,
-  customer: Object,
+  customerId: Number,
   product: Object,
-  createdDate: Date
+  createdAt: Date
 })(class Product {});
 
 module.exports = Purchase;

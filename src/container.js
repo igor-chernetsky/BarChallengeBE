@@ -37,7 +37,10 @@ const {
   DeleteChallenge
 } = require('./app/challenge');
 const {
-  CreatePurchase
+  CreatePurchase,
+  GetCustomerPurchases,
+  GetProviderPurchases,
+  DeletePurchase
 } = require('./app/purchase');
 
 const CustomerSerializer = require('./interfaces/http/customer/CustomerSerializer');
@@ -154,6 +157,9 @@ container.register({
   deleteChallenge: asClass(DeleteChallenge),
 
   createPurchase: asClass(CreatePurchase),
+  getCustomerPurchases: asClass(GetCustomerPurchases),
+  getProviderPurchases: asClass(GetProviderPurchases),
+  deletePurchase: asClass(DeletePurchase)
 });
 
 // Serializers
