@@ -10,6 +10,7 @@ const ChallengesController = {
     router.get('/', inject('getAllChallenges'), this.index);
     router.get('/provider/:id', inject('getProviderChallenges'), this.indexProvider);
     router.get('/customer/:id', inject('getCustomerChallenges'), this.indexCustomer);
+    router.get('/rewards/:id', inject('getRewards'), this.indexRewards);
     router.get('/:id', inject('getChallenge'), this.show);
     router.post('/customer', inject('setCustomerChallenge'), this.setCustomerChallenge);
     router.post('/', inject('createChallenge'), this.create);
@@ -59,6 +60,20 @@ const ChallengesController = {
       .on(ERROR, next);
 
     getCustomerChallenges.execute(Number(req.params.id));
+  },
+
+  indexRewards(req, res, next) {
+    const { getRewards, challengeSerializer } = req;
+    const { SUCCESS, ERROR } = getRewards.outputs;
+    getRewards
+      .on(SUCCESS, (challenges) => {
+        res
+          .status(Status.OK)
+          .json(challenges.map(challengeSerializer.serialize));
+      })
+      .on(ERROR, next);
+
+    getRewards.execute(Number(req.params.id));
   },
 
   setCustomerChallenge(req, res, next) {

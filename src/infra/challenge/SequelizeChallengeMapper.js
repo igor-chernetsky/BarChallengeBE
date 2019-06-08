@@ -17,8 +17,11 @@ const SequelizeChallengeMapper = {
       products = steps.map(s => {
         const product = s.dataValues.product;
         if (product) {
+          console.log(s.dataValues.purchaseSteps);
           product.dataValues.isReward = s.dataValues.isReward;
           product.dataValues.stepId = s.dataValues.id;
+          product.dataValues.status =
+            (s.dataValues.purchaseSteps && s.dataValues.purchaseSteps.length) ? 'done' : undefined;
           return ProductMapper.toEntity(product);
         }
       });

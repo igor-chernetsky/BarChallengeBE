@@ -1,6 +1,7 @@
 const ChallengeMapper = require('../challenge/SequelizeChallengeMapper');
 const PurchaseMapper = require('./SequelizePurchaseMapper');
 const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 class SequelizePurchasesRepository {
   constructor({ ChallengeModel, StepModel, ProductModel, CustomerModel,
@@ -23,34 +24,43 @@ class SequelizePurchasesRepository {
     }
 
     const params = {include: [
-        {model: this.StepModel, where: {isReward: false}, include: {model: this.ProductModel}}
-      ]};
+      {model: this.StepModel, where: {isReward: false}, include: {
+        model: this.ProductModel,
+        where: {id: productId}
+      }}
+    ]};
     const providerChallenges = await this.ChallengeModel.findAll(params).map(ChallengeMapper.toEntity);
-
     const createResult = await this.PurchaseModel.create({customerId, productId});
     const purchase = PurchaseMapper.toEntity(createResult);
     await Promise.all(providerChallenges.map(ch => {
       const stepIds = ch.products.filter(p => p.id === productId).map(p => p.stepId);
       this.StepModel.findAll({
-        include: [{
+        include: {
           model: this.ChallengeModel, include: {
+            required: false,
             model: this.ChallengeCustomerModel,
             where: {customerId, rewardId: null},
+            include: {
+              model: this.PurchaseStepModel,
+              required: false,
+              where: Sequelize.where(
+                Sequelize.col('stepId'),
+                Sequelize.col('step.id')
+              )
+            }
           }
-        }, {
-          model: this.PurchaseStepModel,
-          required: false
-        }],
+        },
         where: {
           challengeId: ch.id,
           productId,
           isReward: false,
-          '$challenge.id$': ch.id,
-          '$purchaseSteps.id$': null }
+          '$challenge->challengeCustomers.id$': {[Op.ne]: null},
+          '$challenge->challengeCustomers->purchaseSteps.id$': null
+        }
       })
-      .then(async cc => {
-        if (cc && cc.length) {
-          const firstStep = cc[0].dataValues;
+      .then(async st => {
+        if (st && st.length) {
+          const firstStep = st[0].dataValues;
           const customerChallenge = PurchaseMapper
             .toChallengeCustomerEntity(firstStep.challenge.dataValues.challengeCustomers[0]);
           await this.PurchaseStepModel.create({
@@ -60,17 +70,17 @@ class SequelizePurchasesRepository {
           });
         } else {
           const customerChallenge = await this._createCustomerChallenge(ch.id, customerId);
-          const purchaseProduct = ch.products.find(p => p.id === productId);
+          const purchaseProduct = ch.products.find(p => p.id === productId && !p.isReward);
           await this.PurchaseStepModel.create({
             purchaseId: purchase.id,
             challengeCustomerId: customerChallenge.id,
             stepId: purchaseProduct.stepId
           });
         }
-      })
+      });
     }));
     return purchase;
-  }
+  };
 
   async getForCustomer(customerId) {
     const result = await this.PurchaseModel.findAll({

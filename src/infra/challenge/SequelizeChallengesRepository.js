@@ -28,13 +28,21 @@ class SequelizeChallengesRepository {
 
   async getCustomerChallenges(customerId) {
     const params = {
-      include: [{
+      include: {
         model: this.ChallengeModel, include:
         [
           {
             model: this.StepModel,
             include: [
-              {model: this.ProductModel}
+              {model: this.ProductModel},
+              {
+                model: this.PurchaseStepModel,
+                required: false,
+                where: Sequelize.where(
+                  Sequelize.col('challengeCustomerId'),
+                  Sequelize.col('challengeCustomer.id')
+                )
+              }
             ]
           },
           {
@@ -42,25 +50,33 @@ class SequelizeChallengesRepository {
             attributes: ['id', 'name', 'email', 'description', 'address']
           },
         ]
-      }, {
-        model: this.PurchaseStepModel,
-        required: false,
-      }],
+      },
       where: {customerId}
     };
     const customerChallenges = await this.ChallengeCustomerModel.findAll(params);
     const challenges = customerChallenges.map(ch => {
       const challenge = ChallengeMapper.toEntity(ch.dataValues.challenge);
-      const purchasedSteps = ch.dataValues.purchaseSteps.filter(ps => {
-        return ps.dataValues.challengeCustomerId === ch.dataValues.id;
-      });
-      challenge.products.forEach(p => {
-        if (purchasedSteps.find(ps => ps.dataValues.stepId === p.stepId)) p.status = 'done';
-      });
       return challenge;
     });
 
     return challenges;
+  }
+
+  async getRewards(providerId) {
+
+    const challenges = await this.ChallengeModel.findAll({
+      include: [{
+        model: this.ChallengeCustomerModel,
+        where: {rewardId: null},
+        include: {
+          model: this.PurchaseStepModel,
+        }
+      }],
+      where: {
+        providerId
+      }
+    });
+    return challenges.map(ChallengeMapper.toEntity);
   }
 
   async getById(id) {

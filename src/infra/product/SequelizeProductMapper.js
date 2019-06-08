@@ -10,6 +10,7 @@ const SequelizeProductMapper = {
       description,
       provider,
       isReward,
+      status,
       stepId
     } = dataValues;
     const porductPorvider = provider ? ProviderMapper.toEntity({dataValues: provider}) : undefined;
@@ -20,6 +21,7 @@ const SequelizeProductMapper = {
       description,
       isReward,
       stepId,
+      status,
       provider: porductPorvider
     });
   },
