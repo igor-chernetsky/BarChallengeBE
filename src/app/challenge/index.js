@@ -4,7 +4,8 @@ module.exports = {
   GetCustomerChallenges: require('./GetCustomerChallenges'),
   CreateChallenge: require('./CreateChallenge'),
   GetChallenge: require('./GetChallenge'),
-  GetRewards: require('./GetRewards'),
+  GetProviderRewards: require('./GetProviderRewards'),
+  GetCustomerRewards: require('./GetCustomerRewards'),
   UpdateChallenge: require('./UpdateChallenge'),
   DeleteChallenge: require('./DeleteChallenge')
 };

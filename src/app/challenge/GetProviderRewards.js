@@ -1,6 +1,6 @@
 const Operation = require('src/app/Operation');
 
-class GetRewards extends Operation {
+class GetProviderRewards extends Operation {
   constructor({ challengesRepository }) {
     super();
     this.challengesRepository = challengesRepository;
@@ -10,7 +10,7 @@ class GetRewards extends Operation {
     const { SUCCESS, ERROR } = this.outputs;
 
     try {
-      const challenges = await this.challengesRepository.getRewards(providerId);
+      const challenges = await this.challengesRepository.getProviderRewards(providerId);
 
       this.emit(SUCCESS, challenges);
     } catch(error) {
@@ -19,6 +19,6 @@ class GetRewards extends Operation {
   }
 }
 
-GetRewards.setOutputs(['SUCCESS', 'ERROR', 'FORBIDDEN']);
+GetProviderRewards.setOutputs(['SUCCESS', 'ERROR', 'FORBIDDEN']);
 
-module.exports = GetRewards;
+module.exports = GetProviderRewards;

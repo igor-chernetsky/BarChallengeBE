@@ -10,7 +10,8 @@ const ChallengesController = {
     router.get('/', inject('getAllChallenges'), this.index);
     router.get('/provider/:id', inject('getProviderChallenges'), this.indexProvider);
     router.get('/customer/:id', inject('getCustomerChallenges'), this.indexCustomer);
-    router.get('/rewards/:id', inject('getRewards'), this.indexRewards);
+    router.get('/rewards/:id', inject('getCustomerRewards'), this.indexCustomerRewards);
+    router.get('/rewards/provider/:id', inject('getProviderRewards'), this.indexProviderRewards);
     router.get('/:id', inject('getChallenge'), this.show);
     router.post('/customer', inject('setCustomerChallenge'), this.setCustomerChallenge);
     router.post('/', inject('createChallenge'), this.create);
@@ -62,10 +63,10 @@ const ChallengesController = {
     getCustomerChallenges.execute(Number(req.params.id));
   },
 
-  indexRewards(req, res, next) {
-    const { getRewards, challengeSerializer } = req;
-    const { SUCCESS, ERROR } = getRewards.outputs;
-    getRewards
+  indexCustomerRewards(req, res, next) {
+    const { getCustomerRewards, challengeSerializer } = req;
+    const { SUCCESS, ERROR } = getCustomerRewards.outputs;
+    getCustomerRewards
       .on(SUCCESS, (challenges) => {
         res
           .status(Status.OK)
@@ -73,7 +74,21 @@ const ChallengesController = {
       })
       .on(ERROR, next);
 
-    getRewards.execute(Number(req.params.id));
+    getCustomerRewards.execute(Number(req.params.id));
+  },
+
+  indexProviderRewards(req, res, next) {
+    const { getProviderRewards, challengeSerializer } = req;
+    const { SUCCESS, ERROR } = getProviderRewards.outputs;
+    getProviderRewards
+      .on(SUCCESS, (challenges) => {
+        res
+          .status(Status.OK)
+          .json(challenges.map(challengeSerializer.serialize));
+      })
+      .on(ERROR, next);
+
+    getProviderRewards.execute(Number(req.params.id));
   },
 
   setCustomerChallenge(req, res, next) {

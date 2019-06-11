@@ -33,7 +33,8 @@ const {
   GetProviderChallenges,
   GetCustomerChallenges,
   GetChallenge,
-  GetRewards,
+  GetCustomerRewards,
+  GetProviderRewards,
   UpdateChallenge,
   DeleteChallenge
 } = require('./app/challenge');
@@ -154,7 +155,8 @@ container.register({
   getProviderChallenges: asClass(GetProviderChallenges),
   getCustomerChallenges: asClass(GetCustomerChallenges),
   getChallenge: asClass(GetChallenge),
-  getRewards: asClass(GetRewards),
+  getCustomerRewards: asClass(GetCustomerRewards),
+  getProviderRewards: asClass(GetProviderRewards),
   updateChallenge: asClass(UpdateChallenge),
   deleteChallenge: asClass(DeleteChallenge),
 

@@ -1,5 +1,6 @@
 const ChallengeMapper = require('./SequelizeChallengeMapper');
 const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 class SequelizeChallengesRepository {
   constructor({ ChallengeModel, StepModel, ProductModel,
@@ -22,7 +23,6 @@ class SequelizeChallengesRepository {
     }
 
     const challenges = await this.ChallengeModel.findAll(...args);
-    console.log(challenges);
     return challenges.map(ChallengeMapper.toEntity);
   }
 
@@ -58,25 +58,70 @@ class SequelizeChallengesRepository {
       const challenge = ChallengeMapper.toEntity(ch.dataValues.challenge);
       return challenge;
     });
-
     return challenges;
   }
 
-  async getRewards(providerId) {
-
-    const challenges = await this.ChallengeModel.findAll({
-      include: [{
-        model: this.ChallengeCustomerModel,
-        where: {rewardId: null},
+  async getProviderRewards(providerId) {
+    const result = await this.ChallengeCustomerModel.findAll({
+      include: {
+        model: this.ChallengeModel,
+        where: {providerId},
         include: {
-          model: this.PurchaseStepModel,
+          model: this.StepModel,
+          include: [{
+            model: this.PurchaseStepModel,
+            required: false,
+            where: Sequelize.where(
+              Sequelize.col('challengeCustomerId'),
+              Sequelize.col('challengeCustomer.id')
+            )
+          },{
+            model: this.ProductModel
+          }]
         }
-      }],
-      where: {
-        providerId
-      }
+      },
+      where: {rewardId: null}
     });
-    return challenges.map(ChallengeMapper.toEntity);
+    let challenges = result.map(cc => {
+      return ChallengeMapper.toEntity(cc.dataValues.challenge);
+    });
+    challenges = challenges.filter(ch => {
+      return !ch.products.find(p => (p.status !== 'done' && !p.isReward));
+    });
+    return challenges;
+  }
+
+  async getCustomerRewards(customerId) {
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    const result = await this.ChallengeCustomerModel.findAll({
+      include: {
+        model: this.ChallengeModel,
+        include: {
+          model: this.StepModel,
+          include: [{
+            model: this.PurchaseStepModel,
+            required: false,
+            where: Sequelize.where(
+              Sequelize.col('challengeCustomerId'),
+              Sequelize.col('challengeCustomer.id')
+            )
+          },{
+            model: this.ProductModel
+          }]
+        }
+      },
+      where: {rewardId: null, customerId}
+    });
+    let challenges = result.map(cc => {
+      return ChallengeMapper.toEntity(cc.dataValues.challenge);
+    });
+    console.log('-----------');
+    challenges = challenges.filter(ch => {
+      console.log(ch.products);
+      return !ch.products.find(p => (p.status !== 'done' && !p.isReward));
+    });
+    return challenges;
+
   }
 
   async getById(id) {
@@ -101,16 +146,30 @@ class SequelizeChallengesRepository {
 
   async update(id, newData) {
     const challenge = await this._getById(id);
+    const oldChallenge = ChallengeMapper.toEntity(challenge);
 
     const transaction = await this.ChallengeModel.sequelize.transaction();
 
     try {
-      const updatedChallenge = await challenge.update(newData, { transaction });
+      console.log(newData.products);
+      const newSteps = newData.products.filter(np => !np.stepId);
+      const delStepsIds = oldChallenge.products
+        .filter(op => !newData.products.find(np => op.stepId === np.stepId))
+        .map(p => p.stepId);
 
       const productsList = ChallengeMapper.toStepDatabase(id, newData.products);
-      await this.StepModel.destroy({where: {challengeId: id}});
-      await this.StepModel.bulkCreate(productsList);
-      const challengeEntity = ChallengeMapper.toEntity(updatedChallenge);
+      await Promise.all([
+        challenge.update(newData, { transaction }),
+        this.StepModel.destroy({
+          where: {
+            id: {
+              [Op.in]: delStepsIds
+            }
+          }
+        }, { transaction }),
+        this.StepModel
+        .bulkCreate(ChallengeMapper.toStepDatabase(id, newSteps), { transaction })
+      ]);
 
       await transaction.commit();
 
@@ -136,7 +195,6 @@ class SequelizeChallengesRepository {
       ]};
       return await this.ChallengeModel.findByPk(challengeId, params);
     } catch(error) {
-      console.log(error);
       if(error.name === 'SequelizeEmptyResultError') {
         const notFoundError = new Error('NotFoundError');
         notFoundError.details = `Challenge with id ${id} can't be found.`;
