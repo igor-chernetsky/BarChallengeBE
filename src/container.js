@@ -33,11 +33,14 @@ const {
   GetProviderChallenges,
   GetCustomerChallenges,
   GetChallenge,
-  GetCustomerRewards,
-  GetProviderRewards,
   UpdateChallenge,
   DeleteChallenge
 } = require('./app/challenge');
+const {
+  GetCustomerRewards,
+  GetProviderRewards,
+  SetReward
+} = require('./app/reward');
 const {
   CreatePurchase,
   GetCustomerPurchases,
@@ -64,6 +67,7 @@ const SequelizeCustomersRepository = require('./infra/customer/SequelizeCustomer
 const SequelizeProvidersRepository = require('./infra/provider/SequelizeProvidersRepository');
 const SequelizeProductsRepository = require('./infra/product/SequelizeProductsRepository');
 const SequelizeChallengesRepository = require('./infra/challenge/SequelizeChallengesRepository');
+const SequelizeRewardsRepository = require('./infra/reward/SequelizeRewardsRepository');
 const SequelizePurchasesRepository = require('./infra/purchase/SequelizePurchasesRepository');
 
 const { database,
@@ -111,6 +115,7 @@ container.register({
   providersRepository: asClass(SequelizeProvidersRepository).singleton(),
   productsRepository: asClass(SequelizeProductsRepository).singleton(),
   challengesRepository: asClass(SequelizeChallengesRepository).singleton(),
+  rewardsRepository: asClass(SequelizeRewardsRepository).singleton(),
   purchasesRepository: asClass(SequelizePurchasesRepository).singleton()
 });
 
@@ -155,10 +160,12 @@ container.register({
   getProviderChallenges: asClass(GetProviderChallenges),
   getCustomerChallenges: asClass(GetCustomerChallenges),
   getChallenge: asClass(GetChallenge),
-  getCustomerRewards: asClass(GetCustomerRewards),
-  getProviderRewards: asClass(GetProviderRewards),
   updateChallenge: asClass(UpdateChallenge),
   deleteChallenge: asClass(DeleteChallenge),
+
+  getCustomerRewards: asClass(GetCustomerRewards),
+  getProviderRewards: asClass(GetProviderRewards),
+  setReward: asClass(SetReward),
 
   createPurchase: asClass(CreatePurchase),
   getCustomerPurchases: asClass(GetCustomerPurchases),

@@ -51,7 +51,7 @@ class SequelizeChallengesRepository {
           },
         ]
       },
-      where: {customerId}
+      where: {customerId, rewardId: null}
     };
     const customerChallenges = await this.ChallengeCustomerModel.findAll(params);
     const challenges = customerChallenges.map(ch => {
@@ -59,69 +59,6 @@ class SequelizeChallengesRepository {
       return challenge;
     });
     return challenges;
-  }
-
-  async getProviderRewards(providerId) {
-    const result = await this.ChallengeCustomerModel.findAll({
-      include: {
-        model: this.ChallengeModel,
-        where: {providerId},
-        include: {
-          model: this.StepModel,
-          include: [{
-            model: this.PurchaseStepModel,
-            required: false,
-            where: Sequelize.where(
-              Sequelize.col('challengeCustomerId'),
-              Sequelize.col('challengeCustomer.id')
-            )
-          },{
-            model: this.ProductModel
-          }]
-        }
-      },
-      where: {rewardId: null}
-    });
-    let challenges = result.map(cc => {
-      return ChallengeMapper.toEntity(cc.dataValues.challenge);
-    });
-    challenges = challenges.filter(ch => {
-      return !ch.products.find(p => (p.status !== 'done' && !p.isReward));
-    });
-    return challenges;
-  }
-
-  async getCustomerRewards(customerId) {
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-    const result = await this.ChallengeCustomerModel.findAll({
-      include: {
-        model: this.ChallengeModel,
-        include: {
-          model: this.StepModel,
-          include: [{
-            model: this.PurchaseStepModel,
-            required: false,
-            where: Sequelize.where(
-              Sequelize.col('challengeCustomerId'),
-              Sequelize.col('challengeCustomer.id')
-            )
-          },{
-            model: this.ProductModel
-          }]
-        }
-      },
-      where: {rewardId: null, customerId}
-    });
-    let challenges = result.map(cc => {
-      return ChallengeMapper.toEntity(cc.dataValues.challenge);
-    });
-    console.log('-----------');
-    challenges = challenges.filter(ch => {
-      console.log(ch.products);
-      return !ch.products.find(p => (p.status !== 'done' && !p.isReward));
-    });
-    return challenges;
-
   }
 
   async getById(id) {

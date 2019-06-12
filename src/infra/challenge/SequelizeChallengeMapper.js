@@ -59,7 +59,7 @@ const SequelizeChallengeMapper = {
       };
     });
     return productsList
-  }
+  },
 };
 
 module.exports = SequelizeChallengeMapper;

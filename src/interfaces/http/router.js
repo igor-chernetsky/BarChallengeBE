@@ -51,6 +51,7 @@ module.exports = ({
   apiRouter.use('/products', controller('product/ProductsController'));
   apiRouter.use('/challenges', controller('challenge/ChallengesController'));
   apiRouter.use('/purchases', controller('purchase/PurchasesController'));
+  apiRouter.use('/rewards', controller('reward/RewardsController'));
 
   router.use('/api', apiRouter);
 

@@ -1,16 +1,16 @@
 const Operation = require('src/app/Operation');
 
 class GetCustomerRewards extends Operation {
-  constructor({ challengesRepository }) {
+  constructor({ rewardsRepository }) {
     super();
-    this.challengesRepository = challengesRepository;
+    this.rewardsRepository = rewardsRepository;
   }
 
   async execute(customerId) {
     const { SUCCESS, ERROR } = this.outputs;
 
     try {
-      const challenges = await this.challengesRepository.getCustomerRewards(customerId);
+      const challenges = await this.rewardsRepository.getCustomerRewards(customerId);
 
       this.emit(SUCCESS, challenges);
     } catch(error) {

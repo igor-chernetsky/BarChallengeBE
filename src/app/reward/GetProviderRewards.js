@@ -1,16 +1,21 @@
 const Operation = require('src/app/Operation');
 
 class GetProviderRewards extends Operation {
-  constructor({ challengesRepository }) {
+  constructor({ rewardsRepository }) {
     super();
-    this.challengesRepository = challengesRepository;
+    this.rewardsRepository = rewardsRepository;
   }
 
   async execute(providerId) {
     const { SUCCESS, ERROR } = this.outputs;
 
+    if (authData.role !== 'provider' || authData.userId !== productData.provider.id) {
+      const error = new Error('Forbidden');
+      return this.emit(FORBIDDEN, error);
+    }
+
     try {
-      const challenges = await this.challengesRepository.getProviderRewards(providerId);
+      const challenges = await this.rewardsRepository.getProviderRewards(providerId);
 
       this.emit(SUCCESS, challenges);
     } catch(error) {
