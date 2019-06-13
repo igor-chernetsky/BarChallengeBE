@@ -18,7 +18,7 @@
     "lint": "eslint {src,test,config}/**/*.js",
     "sequelize": "cross-env NODE_PATH=. sequelize",
     "console": "cross-env NODE_PATH=. node src/interfaces/console/index.js",
-    "heroku-postbuild": "NODE_ENV=production NODE_PATH=. sequelize db:migrate --url=$DATABASE_URL",
+    "heroku-postbuild": "NODE_ENV=production NODE_PATH=. sequelize db:migrate --url=\"jdbc:postgresql://drinkchallengetest.c1kolgkgncfn.eu-central-1.rds.amazonaws.com/DrinkChallengeTest?user=dcadmin&password=Ser3nity\"",
     "pm2": "pm2",
     "cleanup": "node scripts/cleanup.js"
   },
