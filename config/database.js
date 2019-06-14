@@ -20,7 +20,12 @@ module.exports = {
     database: 'DrinkChallengeTest',
     host: 'drinkchallengetest.c1kolgkgncfn.eu-central-1.rds.amazonaws.com',
     dialect: 'postgres',
-    port: 5432,
-    logging: null
+    logging: null,
+    pool: {
+      max: 5,
+      min: 0,
+      idle: 20000,
+      acquire: 20000
+    }
   }
 };
