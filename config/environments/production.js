@@ -1,6 +1,6 @@
 module.exports = {
   web: {
-    port: process.env.PORT,
+    port: process.env.PORT || 3000,
     auth: {
       secret: 'hellodarknesmyoldfrienD',
       saltRounds: 15,
