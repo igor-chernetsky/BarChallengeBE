@@ -1,17 +1,16 @@
 module.exports = {
   development: {
-    username: 'dcadmin',
+    username: 'admin',
     password: 'Ser3nity',
-    database: 'DrinkChallengeTest',
-    host: 'drinkchallengetest.c1kolgkgncfn.eu-central-1.rds.amazonaws.com',
-    dialect: 'postgres',
-    logging: null
+    database: 'challengeDev',
+    host: '127.0.0.1',
+    dialect: 'postgres'
   },
   test: {
-    username: 'dcadmin',
+    username: 'admin',
     password: 'Ser3nity',
-    database: 'DrinkChallengeTest',
-    host: 'drinkchallengetest.c1kolgkgncfn.eu-central-1.rds.amazonaws.com',
+    database: 'challengeTest',
+    host: '127.0.0.1',
     dialect: 'postgres',
     logging: null
   },
@@ -21,6 +20,7 @@ module.exports = {
     database: 'DrinkChallengeTest',
     host: 'drinkchallengetest.c1kolgkgncfn.eu-central-1.rds.amazonaws.com',
     dialect: 'postgres',
+    port: 5432,
     logging: null
   }
 };
