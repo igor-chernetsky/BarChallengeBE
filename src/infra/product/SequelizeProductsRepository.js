@@ -42,14 +42,14 @@ class SequelizeProductsRepository {
       const updatedProduct = await product.update(newData, { transaction });
       const productEntity = ProductMapper.toEntity(updatedProduct);
 
-      const { valid, errors } = productEntity.validate();
+      // const { valid, errors } = productEntity.validate();
 
-      if(!valid) {
-        const error = new Error('ValidationError');
-        error.details = errors;
+      // if(!valid) {
+      //   const error = new Error('ValidationError');
+      //   error.details = errors;
 
-        throw error;
-      }
+      //   throw error;
+      // }
 
       await transaction.commit();
 
