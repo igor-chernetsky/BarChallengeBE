@@ -13,8 +13,8 @@ module.exports = {
       { type: 'console', layout: { type: 'basic' } }
     ]
   },
-  "AWS_KEYS": {
-    "id": "AKIAJ5NVYP24OIXO5O5Q",
-    "secret": "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"
+  awsKeys: {
+    id: "AKIAJ5NVYP24OIXO5O5Q",
+    secret: "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"
   }
 };
