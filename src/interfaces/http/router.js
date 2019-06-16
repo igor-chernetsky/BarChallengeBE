@@ -52,6 +52,7 @@ module.exports = ({
   apiRouter.use('/challenges', controller('challenge/ChallengesController'));
   apiRouter.use('/purchases', controller('purchase/PurchasesController'));
   apiRouter.use('/rewards', controller('reward/RewardsController'));
+  apiRouter.use('/image', controller('uploader/UploaderController'));
 
   router.use('/api', apiRouter);
 

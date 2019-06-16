@@ -16,5 +16,9 @@ module.exports = {
       { type: 'console' },
       { type: 'file', filename: logPath }
     ]
+  },
+  awsKeys: {
+    id: "AKIAJ5NVYP24OIXO5O5Q",
+    secret: "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"
   }
 };
