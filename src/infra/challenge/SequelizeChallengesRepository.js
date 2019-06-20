@@ -17,7 +17,8 @@ class SequelizeChallengesRepository {
   async getAll(...args) {
     if (args.length) {
       Object.assign(args[0], {include: [
-        {model: this.ProviderModel, attributes: ['id', 'name', 'email', 'description', 'address']},
+        {model: this.ProviderModel, attributes:
+          ['id', 'name', 'email', 'description', 'lat', 'lng', 'city', 'address', 'logo']},
         {model: this.StepModel, include: {model: this.ProductModel}}
       ]});
     }
@@ -47,7 +48,9 @@ class SequelizeChallengesRepository {
           },
           {
             model: this.ProviderModel,
-            attributes: ['id', 'name', 'email', 'description', 'address']
+            attributes: [
+              'id', 'name', 'email', 'description',
+              'lat', 'lng', 'city', 'address', 'logo']
           },
         ]
       },
@@ -88,7 +91,6 @@ class SequelizeChallengesRepository {
     const transaction = await this.ChallengeModel.sequelize.transaction();
 
     try {
-      console.log(newData.products);
       const newSteps = newData.products.filter(np => !np.stepId);
       const delStepsIds = oldChallenge.products
         .filter(op => !newData.products.find(np => op.stepId === np.stepId))
@@ -127,7 +129,9 @@ class SequelizeChallengesRepository {
   async _getById(challengeId) {
     try {
       const params = {include: [
-        {model: this.ProviderModel, attributes: ['id', 'name', 'email', 'description', 'address']},
+        {model: this.ProviderModel, attributes:
+          ['id', 'name', 'email', 'description',
+          'lat', 'lng', 'city', 'address', 'logo']},
         {model: this.StepModel, include: {model: this.ProductModel}}
       ]};
       return await this.ChallengeModel.findByPk(challengeId, params);

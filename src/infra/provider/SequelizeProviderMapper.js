@@ -7,19 +7,32 @@ const SequelizeProviderMapper = {
       name,
       logo,
       description,
+      lat,
+      lng,
+      city,
       address,
       email,
       status,
-      phone
+      phone,
+      providerImages
     } = dataValues;
+
+    let images = [];
+    if (providerImages && providerImages.length) {
+      images = providerImages.map(pi => pi.image);
+    }
 
     return new Provider({
       id,
       name,
       logo,
       description,
+      lat,
+      lng,
+      city,
       address,
       email,
+      images,
       phone
     });
   },
@@ -29,6 +42,9 @@ const SequelizeProviderMapper = {
       name,
       logo,
       description,
+      lat,
+      lng,
+      city,
       address,
       email,
       status,
@@ -39,6 +55,9 @@ const SequelizeProviderMapper = {
       name,
       logo,
       description,
+      lat,
+      lng,
+      city,
       address,
       email,
       status,

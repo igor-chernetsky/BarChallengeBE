@@ -42,6 +42,7 @@ module.exports = {
     });
   },
   down: function(queryInterface) {
+    queryInterface.dropTable('purchaseStep');
     return queryInterface.dropTable('steps');
   }
 };

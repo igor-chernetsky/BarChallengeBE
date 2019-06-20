@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('purchaseSteps', {
+    return queryInterface.createTable('providerImages', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -16,39 +16,23 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      stepId: {
+      providerId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'steps',
+          model: 'providers',
           key: 'id'
         },
         onUpdate: 'cascade',
         onDelete: 'cascade'
       },
-      purchaseId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'purchases',
-          key: 'id'
-        },
-        onUpdate: 'cascade',
-        onDelete: 'cascade'
-      },
-      challengeCustomerId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'challengeCustomers',
-          key: 'id'
-        },
-        onUpdate: 'cascade',
-        onDelete: 'cascade'
+      image: {
+        type: Sequelize.STRING,
+        allowNull: false
       }
     });
   },
   down: function(queryInterface) {
-    return queryInterface.dropTable('purchaseSteps');
+    return queryInterface.dropTable('providerImages');
   }
 };

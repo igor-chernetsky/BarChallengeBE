@@ -1,12 +1,18 @@
 const ProviderMapper = require('./SequelizeProviderMapper');
 const bcrypt = require('bcrypt');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 class SequelizeProvidersRepository {
-  constructor({ ProviderModel }) {
+  constructor({ ProviderModel, ProviderImageModel }) {
     this.ProviderModel = ProviderModel;
+    this.ProviderImageModel = ProviderImageModel;
   }
 
   async getAll(...args) {
+    if (args.length) {
+      Object.assign(args[0], {include: [{model: this.ProviderImageModel}]});
+    }
     const providers = await this.ProviderModel.findAll(...args);
     return providers.map(ProviderMapper.toEntity);
   }
@@ -50,24 +56,36 @@ class SequelizeProvidersRepository {
 
   async update(id, newData) {
     const provider = await this._getById(id);
+    const oldProvider = ProviderMapper.toEntity(provider);
 
     const transaction = await this.ProviderModel.sequelize.transaction();
 
     try {
-      const updatedProvider = await provider.update(newData, { transaction });
-      const providerEntity = ProviderMapper.toEntity(updatedProvider);
-      const { valid, errors } = providerEntity.validate();
-
-      if(!valid) {
-        const error = new Error('ValidationError');
-        error.details = errors;
-
-        throw error;
-      }
-
+      if (!oldProvider.images) oldProvider.images = [];
+      if (!newData.images) newData.images = [];
+      const newImages = newData.images
+        .filter(i => oldProvider.images.indexOf(i) === -1)
+        .map(image => {
+          return {
+            providerId: id,
+            image
+          };
+        });
+      const delImages = oldProvider.images.filter(oi => newData.images.indexOf(oi) === -1);
+      await Promise.all([
+        provider.update(newData, { transaction }),
+        this.ProviderImageModel.destroy({
+          where: {
+            image: {
+              [Op.in]: delImages
+            }
+          }
+        }, { transaction }),
+        this.ProviderImageModel
+        .bulkCreate(newImages, { transaction })
+      ]);
       await transaction.commit();
-
-      return providerEntity;
+      return this.getById(id);
     } catch(error) {
       await transaction.rollback();
 
@@ -83,7 +101,10 @@ class SequelizeProvidersRepository {
 
   async _getById(id) {
     try {
-      return await this.ProviderModel.findByPk(id, { rejectOnEmpty: true });
+      return await this.ProviderModel.findByPk(id, {
+        rejectOnEmpty: true,
+        include: [{model: this.ProviderImageModel}]
+      });
     } catch(error) {
       if(error.name === 'SequelizeEmptyResultError') {
         const notFoundError = new Error('NotFoundError');

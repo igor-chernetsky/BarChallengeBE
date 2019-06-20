@@ -1,12 +1,16 @@
 const ProviderSerializer = {
-  serialize({ id, name, email, phone, address, description, logo }) {
+  serialize({ id, name, email, phone, city, address, lat, lng, description, images, logo }) {
     return {
       id,
       name,
       email,
       phone,
+      city,
       address,
+      lat,
+      lng,
       description,
+      images,
       logo
     };
   }

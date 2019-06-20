@@ -714,11 +714,20 @@
           "address": {
             "type": "string"
           },
+          "city": {
+
+          },
           "description": {
             "type": "string"
           },
           "logo": {
             "type": "string"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "lng": {
+            "type": "number"
           }
         }
       }

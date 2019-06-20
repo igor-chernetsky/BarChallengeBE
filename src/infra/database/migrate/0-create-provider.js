@@ -19,7 +19,16 @@ module.exports = {
       phone: {
         type: Sequelize.STRING
       },
+      city: {
+        type: Sequelize.STRING
+      },
       address: {
+        type: Sequelize.STRING
+      },
+      lat: {
+        type: Sequelize.STRING
+      },
+      lng: {
         type: Sequelize.STRING
       },
       logo: {

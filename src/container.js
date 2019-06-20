@@ -79,6 +79,7 @@ const { database,
   Purchase: PurchaseModel,
   ChallengeCustomer: ChallengeCustomerModel,
   PurchaseStep: PurchaseStepModel,
+  ProviderImage: ProviderImageModel
 } = require('./infra/database/models');
 
 const container = createContainer();
@@ -129,7 +130,8 @@ container.register({
   StepModel: asValue(StepModel),
   PurchaseModel: asValue(PurchaseModel),
   ChallengeCustomerModel: asValue(ChallengeCustomerModel),
-  PurchaseStepModel: asValue(PurchaseStepModel)
+  PurchaseStepModel: asValue(PurchaseStepModel),
+  ProviderImageModel: asValue(ProviderImageModel)
 });
 
 // Operations
